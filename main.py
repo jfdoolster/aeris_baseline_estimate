@@ -14,15 +14,28 @@ def gradient_filter(arr: np.ndarray, std_cutoff=0.2):
     mask = (ret > (avg-cutoff)) & (ret < (avg+cutoff))
     return mask
 
+def segmenting_filter(arr:np.ndarray):
+    split_arr, split_num = [arr], 1
+    return split_arr, split_num
+
 
 if __name__=="__main__":
 
     xdata=np.linspace(0,100,75)
 
     smoothed=moving_average(xdata)
-    grad_mask = gradient_filter(smoothed)
-    # todo split
-
     print(len(smoothed))
+    grad_mask = gradient_filter(smoothed)
     print(len(grad_mask))
+
+    #mask bad values first! (then split)
+
+    segments, num_segs = segmenting_filter(smoothed)
+    for segment in segments:
+        print(segment)
+
+
+
+
+
 
