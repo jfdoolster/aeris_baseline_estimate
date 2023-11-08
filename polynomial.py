@@ -1,6 +1,6 @@
 import numpy as np
 
-def slope_intercept(x_arr: np.ndarray, y_arr: np.ndarray, power=1, force_zero=False, y_offset=0.0) -> (np.ndarray, np.ndarray):
+def polynomaial_regression(x_arr: np.ndarray, y_arr: np.ndarray, power=1, force_zero=False, y_offset=0.0) -> (np.ndarray, np.ndarray):
 
     x_arr.shape = (len(x_arr),)
     y_arr.shape = (len(y_arr),1)
