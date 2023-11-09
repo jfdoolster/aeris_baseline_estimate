@@ -1,2 +1,6 @@
+#ignore
 __pycache__
-data
+data/**
+
+#Allow
+!data/flight0.csv

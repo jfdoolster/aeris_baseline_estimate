@@ -22,3 +22,18 @@ def segmenting_filter(arr: np.ndarray, dt=1, period = 120) -> (list, int):
 def segment_array(arr: list, n: int) -> list:
     k, m = divmod(len(arr), n)
     return list(np.array(arr[i*k+min(i, m):(i+1)*k+min(i+1, m)]) for i in range(n))
+
+def new_dict_keyval(d: dict, key: str, val: any) -> dict:
+    if key not in d:
+        d[key] = val
+    return d
+
+def dataset_template(d: dict) -> dict:
+    new_dict_keyval(d,'window_size', 3)
+    new_dict_keyval(d,'segment_period', 120)
+    new_dict_keyval(d,'gradient_filter_std_threshold', 0.2)
+    new_dict_keyval(d,'outlier_filter_std_threshold', 1.0)
+    new_dict_keyval(d,'polynomial_degree', 3)
+    new_dict_keyval(d,'start_time','00:00:00')
+    new_dict_keyval(d,'start_time','23:59:59')
+    return d
