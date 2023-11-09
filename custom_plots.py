@@ -8,7 +8,7 @@ def baseline_correction_plotter(df: pd.DataFrame, d: dict):
     data_color = "C0"
     smooth_color = "C1"
     gradient_color="C2"
-    removed_color="C3"
+    #removed_color="C3"
     fitted_color="C4"
 
     fig = plt.figure()
