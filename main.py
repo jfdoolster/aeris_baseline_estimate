@@ -68,10 +68,17 @@ def baseline_correction(xdata: np.ndarray, ydata: np.ndarray, d: dict):
 
 if __name__=="__main__":
 
+    import argparse
     import matplotlib.pyplot as plt
     from custom_plots import baseline_correction_plotter
 
-    rawdata_path = 'data/flight0.csv'
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-f', '--file', required=True, type=str,
+        help='path to csv datafile with Timestamp and CH4 (or C2H6) labelled data columns')
+    args = parser.parse_args()
+    argdict = vars(args)
+
+    rawdata_path = argdict['file']
 
     dset_info = dataset_template({
         'timestamp_colname': 'Timestamp',     # datatime column name
