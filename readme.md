@@ -7,8 +7,7 @@ developed and tested with python 3.11
 ```bash
 python baseline_subtraction.py -f /path/to/csv
 
-# example dataset:
-python baseline_subtraction.py -f data/flight0.csv
+python baseline_subtraction.py -f data/flight.csv
 ```
 
 ### output:
