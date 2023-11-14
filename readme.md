@@ -1,14 +1,14 @@
-Minimal workin example of baseline correction routine used for NMT UAV-mounted Aires MIRA Pico.
+Minimal working example of baseline correction routine used for NMT UAV-mounted Aires MIRA Pico.
 
 developed and tested with python 3.11
 
 ### usage:
 
 ```bash
-python main.py -f /path/to/csv
+python baseline_subtraction.py -f /path/to/csv
 
 # example dataset:
-python main.py -f data/flight0.csv
+python baseline_subtraction.py -f data/flight0.csv
 ```
 
 ### output:

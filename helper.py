@@ -34,6 +34,4 @@ def dataset_template(d: dict) -> dict:
     new_dict_keyval(d,'gradient_filter_std_threshold', 0.2)
     new_dict_keyval(d,'outlier_filter_std_threshold', 1.0)
     new_dict_keyval(d,'polynomial_degree', 3)
-    new_dict_keyval(d,'start_time','00:00:00')
-    new_dict_keyval(d,'start_time','23:59:59')
     return d

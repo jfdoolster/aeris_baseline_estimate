@@ -4,6 +4,7 @@ import pandas as pd
 from polynomial import polynomial_regression
 from helper import moving_average, segmenting_filter, gradient_filter, dataset_template
 
+
 def baseline_correction(xdata: np.ndarray, ydata: np.ndarray, d: dict):
     df = pd.DataFrame() # initialize output dataframe
 
