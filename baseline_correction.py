@@ -2,8 +2,17 @@ import numpy as np
 import pandas as pd
 
 from polynomial import polynomial_regression
-from helper import moving_average, segmenting_filter, gradient_filter, dataset_template
+from helper import moving_average, segmenting_filter, gradient_filter, new_dict_keyval
 
+def baseline_estimate_template(rawdata_colname: str | int, d=dict({})) -> dict:
+    new_dict_keyval(d,'rawdata_colname', rawdata_colname)
+    new_dict_keyval(d,'timestamp_colname', 'Timestamp')
+    new_dict_keyval(d,'window_size', 3)
+    new_dict_keyval(d,'segment_period', 120)
+    new_dict_keyval(d,'gradient_filter_std_threshold', 0.2)
+    new_dict_keyval(d,'outlier_filter_std_threshold', 1.0)
+    new_dict_keyval(d,'polynomial_degree', 3)
+    return d
 
 def baseline_correction(xdata: np.ndarray, ydata: np.ndarray, d: dict):
     df = pd.DataFrame() # initialize output dataframe
@@ -81,36 +90,29 @@ if __name__=="__main__":
 
     rawdata_path = argdict['file']
 
-    dset_info = dataset_template({
-        'timestamp_colname': 'Timestamp',     # datatime column name
-        'rawdata_colname': 'CH4',             # data column name
-        'window_size': 3,                     # smoothing window size
-        'segment_period': 120,                # approx period for segments in sec
-        'gradient_filter_std_threshold': 0.2, # gradient filter std cuttoff
-        'outlier_filter_std_threshold': 1.0,  # outlier (mean) filter std cuttoff
-        'polynomial_degree': 3,               # polynomial fit order
-    })
+    ch4_dset_info  = baseline_estimate_template(rawdata_colname="CH4")
+    c2h6_dset_info = baseline_estimate_template(rawdata_colname="C2H6", d={'polynomial_degree': 4})
 
     df0 = pd.read_csv(rawdata_path, parse_dates=['Timestamp'])
-    seconds = np.array(df0[dset_info['timestamp_colname']] -
-                     df0[dset_info['timestamp_colname']].min()) / np.timedelta64(1,'s')
+    seconds = np.array(df0['Seconds'] - df0['Seconds'].min())
+    #seconds = np.array(df0[dset_info['timestamp_colname']] -
+    #                 df0[dset_info['timestamp_colname']].min()) / np.timedelta64(1,'s')
 
     # read and process METHANE data only
-    dset_info['rawdata_colname'] = 'CH4'
-    rawdata = np.array(df0[dset_info['rawdata_colname']])
-    df1 = baseline_correction(seconds, rawdata, dset_info)
-    df1 = pd.concat([df0[dset_info['timestamp_colname']], df1], axis=1)
-    print(df1)
-    baseline_correction_plotter(df1, dset_info)
+    rawdata = np.array(df0[ch4_dset_info['rawdata_colname']])
+    df_ch4 = baseline_correction(seconds, rawdata, ch4_dset_info)
+    df_ch4 = pd.concat([df0[ch4_dset_info['timestamp_colname']], df_ch4], axis=1)
+    baseline_correction_plotter(df_ch4, ch4_dset_info)
 
     # read and process ETHANE data only
-    dset_info['rawdata_colname'] = 'C2H6'
-    dset_info['polynomial_degree'] = 4
-    rawdata = np.array(df0[dset_info['rawdata_colname']])
-    df2 = baseline_correction(seconds, rawdata, dset_info)
-    df2 = pd.concat([df0[dset_info['timestamp_colname']], df2], axis=1)
-    print(df2)
-    baseline_correction_plotter(df2, dset_info)
+    rawdata = np.array(df0[c2h6_dset_info['rawdata_colname']])
+    df_c2h6 = baseline_correction(seconds, rawdata, c2h6_dset_info)
+    df_c2h6 = pd.concat([df0[c2h6_dset_info['timestamp_colname']], df_c2h6], axis=1)
+    baseline_correction_plotter(df_c2h6, c2h6_dset_info)
+
+    pd.set_option('display.precision', 2)
+    print(df_ch4)
+    print(df_c2h6)
 
     plt.show()
 

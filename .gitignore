@@ -3,4 +3,4 @@ __pycache__
 data/**
 
 #Allow
-!data/flight0.csv
+!data/flight.csv
