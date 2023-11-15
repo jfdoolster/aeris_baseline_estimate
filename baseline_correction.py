@@ -1,8 +1,8 @@
 import numpy as np
 import pandas as pd
 
-from polynomial import polynomial_regression
-from helper import moving_average, segmenting_filter, gradient_filter, new_dict_keyval
+from .polynomial import polynomial_regression
+from .helper import moving_average, segmenting_filter, gradient_filter, new_dict_keyval
 
 def baseline_estimate_template(rawdata_colname: str | int, d=dict({})) -> dict:
     new_dict_keyval(d,'rawdata_colname', rawdata_colname)
@@ -18,11 +18,11 @@ def baseline_correction(xdata: np.ndarray, ydata: np.ndarray, d: dict):
     df = pd.DataFrame() # initialize output dataframe
 
     smoothed=moving_average(ydata, n=d['window_size'])
-    print(f"{d['rawdata_colname']} {d['window_size']}-point smoothed")
+    #print(f"{d['rawdata_colname']} {d['window_size']}-point smoothed")
 
     # split smoothed data into segments with approximately equal periods
     segments, num_segs = segmenting_filter(smoothed, period=d['segment_period'])
-    print(f"split into {num_segs} segments with period ~{d['segment_period']} sec")
+    #print(f"split into {num_segs} segments with period ~{d['segment_period']} sec")
 
     # loop through segmented (smoothed) data
     for i, segment in enumerate(segments):
