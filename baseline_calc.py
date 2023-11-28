@@ -1,18 +1,6 @@
 import numpy as np
 import pandas as pd
-
-from .polynomial import polynomial_regression
-from .helper import moving_average, segmenting_filter, gradient_filter, new_dict_keyval
-
-def baseline_estimate_template(rawdata_colname: str | int, d=dict({})) -> dict:
-    new_dict_keyval(d,'rawdata_colname', rawdata_colname)
-    new_dict_keyval(d,'timestamp_colname', 'Timestamp')
-    new_dict_keyval(d,'window_size', 3)
-    new_dict_keyval(d,'segment_period', 120)
-    new_dict_keyval(d,'gradient_filter_std_threshold', 0.2)
-    new_dict_keyval(d,'outlier_filter_std_threshold', 1.0)
-    new_dict_keyval(d,'polynomial_degree', 3)
-    return d
+from polynomial import polynomial_regression
 
 def baseline_correction(xdata: np.ndarray, ydata: np.ndarray, d: dict):
     df = pd.DataFrame() # initialize output dataframe
@@ -76,43 +64,48 @@ def baseline_correction(xdata: np.ndarray, ydata: np.ndarray, d: dict):
 
     return df
 
-if __name__=="__main__":
+def baseline_estimate_template(rawdata_colname: str | int, d=dict({})) -> dict:
+    new_dict_keyval(d,'rawdata_colname', rawdata_colname)
+    new_dict_keyval(d,'timestamp_colname', 'Timestamp')
+    new_dict_keyval(d,'window_size', 3)
+    new_dict_keyval(d,'segment_period', 120)
+    new_dict_keyval(d,'gradient_filter_std_threshold', 0.2)
+    new_dict_keyval(d,'outlier_filter_std_threshold', 1.0)
+    new_dict_keyval(d,'polynomial_degree', 3)
+    return d
 
-    import argparse
-    import matplotlib.pyplot as plt
-    from custom_plots import baseline_correction_plotter
+def moving_average(arr: np.ndarray, n=3):
+    ret = np.cumsum(arr, dtype=float)
+    ret[n:] = ret[n:] - ret[:-n]
+    nan_arr = np.empty((n-1,))
+    nan_arr[:] = np.nan
+    return np.hstack((nan_arr, np.array(ret[n-1:]/n)))
 
-    parser = argparse.ArgumentParser()
-    parser.add_argument('-f', '--file', required=True, type=str,
-        help='path to csv datafile with Timestamp and CH4 (or C2H6) labelled data columns')
-    args = parser.parse_args()
-    argdict = vars(args)
+def gradient_filter(arr: np.ndarray, std_cutoff=1.0) -> (np.ndarray, np.ndarray):
+    grad = np.gradient(arr)
+    avg, std = np.nanmean(grad), np.nanstd(grad)
+    cutoff = std_cutoff * std
+    mask = (grad > (avg-cutoff)) & (grad < (avg+cutoff))
+    return mask, grad
 
-    rawdata_path = argdict['file']
+def segmenting_filter(arr: np.ndarray, dt=1, period = 120) -> (list, int):
+    splits = (len(arr) * dt) / period
+    n = int(round(splits))
+    return list(segment_array(list(arr),n)), n
 
-    ch4_dset_info  = baseline_estimate_template(rawdata_colname="CH4")
-    c2h6_dset_info = baseline_estimate_template(rawdata_colname="C2H6", d={'polynomial_degree': 4})
+def segment_array(arr: list, n: int) -> list:
+    k, m = divmod(len(arr), n)
+    return list(np.array(arr[i*k+min(i, m):(i+1)*k+min(i+1, m)]) for i in range(n))
 
-    df0 = pd.read_csv(rawdata_path, parse_dates=['Timestamp'])
-    seconds = np.array(df0['Seconds'] - df0['Seconds'].min())
-    #seconds = np.array(df0[dset_info['timestamp_colname']] -
-    #                 df0[dset_info['timestamp_colname']].min()) / np.timedelta64(1,'s')
+def new_dict_keyval(d: dict, key: str, val: any) -> dict:
+    if key not in d:
+        d[key] = val
+    return d
 
-    # read and process METHANE data only
-    rawdata = np.array(df0[ch4_dset_info['rawdata_colname']])
-    df_ch4 = baseline_correction(seconds, rawdata, ch4_dset_info)
-    df_ch4 = pd.concat([df0[ch4_dset_info['timestamp_colname']], df_ch4], axis=1)
-    baseline_correction_plotter(df_ch4, ch4_dset_info)
-
-    # read and process ETHANE data only
-    rawdata = np.array(df0[c2h6_dset_info['rawdata_colname']])
-    df_c2h6 = baseline_correction(seconds, rawdata, c2h6_dset_info)
-    df_c2h6 = pd.concat([df0[c2h6_dset_info['timestamp_colname']], df_c2h6], axis=1)
-    baseline_correction_plotter(df_c2h6, c2h6_dset_info)
-
-    pd.set_option('display.precision', 2)
-    print(df_ch4)
-    print(df_c2h6)
-
-    plt.show()
-
+def dataset_template(d: dict) -> dict:
+    new_dict_keyval(d,'window_size', 3)
+    new_dict_keyval(d,'segment_period', 120)
+    new_dict_keyval(d,'gradient_filter_std_threshold', 0.2)
+    new_dict_keyval(d,'outlier_filter_std_threshold', 1.0)
+    new_dict_keyval(d,'polynomial_degree', 3)
+    return d
