@@ -44,9 +44,10 @@ def baseline_correction(xdata: np.ndarray, ydata: np.ndarray, d: dict):
         }), df], axis=1)
 
     # polynomial regression on filtered data
+    background_orig = df[df['outlier_mask']][d['rawdata_colname']]
     background_secs = df[df['outlier_mask']]['seconds']
     background_data = df[df['outlier_mask']]['segment_data']
-    betas, _ = polynomial_regression(np.array(background_secs), np.array(background_data),
+    betas, background_yhat = polynomial_regression(np.array(background_secs), np.array(background_data),
                                power = d['polynomial_degree'])
 
     # use filtered polynomial coefs on original data
@@ -57,10 +58,17 @@ def baseline_correction(xdata: np.ndarray, ydata: np.ndarray, d: dict):
     x_mat = np.transpose(x_mat)
     yhat = np.matmul(x_mat, betas).flatten()
 
+    yadj = ydata - yhat
+    yerr = [y if df.loc[i,'outlier_mask'] else np.nan for i,y in enumerate(yadj)]
+
     df = pd.concat([df,
         pd.DataFrame.from_dict({
             f"{d['rawdata_colname']}_baseline": yhat,
+            f"{d['rawdata_colname']}_baseline_error": yerr,
+            f"{d['rawdata_colname']}_adjusted": yadj,
         })], axis=1)
+
+
 
     return df
 
