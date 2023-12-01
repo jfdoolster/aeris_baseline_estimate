@@ -20,20 +20,22 @@ if __name__=="__main__":
     c2h6_dset_info = baseline_estimate_template(rawdata_colname="C2H6", d={'polynomial_degree': 4})
 
     df0 = pd.read_csv(rawdata_path, parse_dates=['Timestamp'])
-    seconds = np.array(df0['Seconds'] - df0['Seconds'].min())
-    #seconds = np.array(df0[dset_info['timestamp_colname']] -
-    #                 df0[dset_info['timestamp_colname']].min()) / np.timedelta64(1,'s')
+    aeris_mask = (df0['CH4'].notna() & df0['C2H6'].notna()) & (df0['Sts'] > 0)
 
     # read and process METHANE data only
-    rawdata = np.array(df0[ch4_dset_info['rawdata_colname']])
+    seconds = np.array(df0.loc[aeris_mask,'Seconds'])
+    rawdata = np.array(df0.loc[aeris_mask, ch4_dset_info['rawdata_colname']])
     df_ch4 = baseline_correction(seconds, rawdata, ch4_dset_info)
-    df_ch4 = pd.concat([df0[ch4_dset_info['timestamp_colname']], df_ch4], axis=1)
+    df_ch4.index = df0.loc[aeris_mask,:].index
+    df_ch4.loc[aeris_mask,'Timestamp'] = df0.loc[aeris_mask,'Timestamp']
     baseline_correction_plotter(df_ch4, ch4_dset_info)
 
     # read and process ETHANE data only
-    rawdata = np.array(df0[c2h6_dset_info['rawdata_colname']])
+    seconds = np.array(df0.loc[aeris_mask,'Seconds'])
+    rawdata = np.array(df0.loc[aeris_mask, c2h6_dset_info['rawdata_colname']])
     df_c2h6 = baseline_correction(seconds, rawdata, c2h6_dset_info)
-    df_c2h6 = pd.concat([df0[c2h6_dset_info['timestamp_colname']], df_c2h6], axis=1)
+    df_c2h6.index = df0.loc[aeris_mask,:].index
+    df_c2h6.loc[aeris_mask,'Timestamp'] = df0.loc[aeris_mask,'Timestamp']
     baseline_correction_plotter(df_c2h6, c2h6_dset_info)
 
     pd.set_option('display.precision', 2)
