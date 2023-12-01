@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from polynomial import polynomial_regression
+import baseline_utils as utils
 
 def baseline_correction(xdata: np.ndarray, ydata: np.ndarray, d: dict):
     df = pd.DataFrame() # initialize output dataframe
@@ -68,18 +69,17 @@ def baseline_correction(xdata: np.ndarray, ydata: np.ndarray, d: dict):
             f"{d['rawdata_colname']}_adjusted": yadj,
         })], axis=1)
 
-
-
     return df
 
+
 def baseline_estimate_template(rawdata_colname: str | int, d=dict({})) -> dict:
-    new_dict_keyval(d,'rawdata_colname', rawdata_colname)
-    new_dict_keyval(d,'timestamp_colname', 'Timestamp')
-    new_dict_keyval(d,'window_size', 3)
-    new_dict_keyval(d,'segment_period', 120)
-    new_dict_keyval(d,'gradient_filter_std_threshold', 0.2)
-    new_dict_keyval(d,'outlier_filter_std_threshold', 1.0)
-    new_dict_keyval(d,'polynomial_degree', 3)
+    utils.new_dict_keyval(d,'rawdata_colname', rawdata_colname)
+    utils.new_dict_keyval(d,'timestamp_colname', 'Timestamp')
+    utils.new_dict_keyval(d,'window_size', 3)
+    utils.new_dict_keyval(d,'segment_period', 120)
+    utils.new_dict_keyval(d,'gradient_filter_std_threshold', 0.2)
+    utils.new_dict_keyval(d,'outlier_filter_std_threshold', 1.0)
+    utils.new_dict_keyval(d,'polynomial_degree', 3)
     return d
 
 def moving_average(arr: np.ndarray, n=3):
@@ -105,15 +105,11 @@ def segment_array(arr: list, n: int) -> list:
     k, m = divmod(len(arr), n)
     return list(np.array(arr[i*k+min(i, m):(i+1)*k+min(i+1, m)]) for i in range(n))
 
-def new_dict_keyval(d: dict, key: str, val: any) -> dict:
-    if key not in d:
-        d[key] = val
-    return d
-
 def dataset_template(d: dict) -> dict:
-    new_dict_keyval(d,'window_size', 3)
-    new_dict_keyval(d,'segment_period', 120)
-    new_dict_keyval(d,'gradient_filter_std_threshold', 0.2)
-    new_dict_keyval(d,'outlier_filter_std_threshold', 1.0)
-    new_dict_keyval(d,'polynomial_degree', 3)
+    # todo: remove function?
+    utils.new_dict_keyval(d,'window_size', 3)
+    utils.new_dict_keyval(d,'segment_period', 120)
+    utils.new_dict_keyval(d,'gradient_filter_std_threshold', 0.2)
+    utils.new_dict_keyval(d,'outlier_filter_std_threshold', 1.0)
+    utils.new_dict_keyval(d,'polynomial_degree', 3)
     return d
