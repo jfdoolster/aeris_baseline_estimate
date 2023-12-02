@@ -7,7 +7,7 @@ Developed and tested with python 3.11
 ```bash
 python main.py -f /path/to/csv
 
-python main.py -f data/flight.csv
+python main.py -f data/merge.csv
 ```
 
 ### output:
@@ -21,7 +21,8 @@ pandas dataframe with
 * gradient of smoothed data ('segment_gradient')
 * boolean mask from gradient filter ('gradient_mask')
 * boolean mask from outlier (mean) filter ('outlier_mask'); final mask for baseline data
-* estimated baseline ('CH4_baseline' or 'C2H4_baseline')
+* estimated baseline ('CH4_baseline' or 'C2H6_baseline')
+* baseline-adjusted data ('CH4_adjusted' or 'C2H6_adjusted')
 
 ### dependencies:
 
