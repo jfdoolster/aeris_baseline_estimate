@@ -26,7 +26,8 @@ def baseline_correction(xdata: np.ndarray, ydata: np.ndarray, d: dict):
         botcut = seg_gavg - (seg_gstd * d['outlier_filter_std_threshold'])
 
         # final mask for background data
-        seg_amask = seg_gmask & ((segment > botcut) & (segment < topcut))
+        seg_amask = (seg_gmask & (segment > botcut)) & \
+            ((segment < topcut) & (segment < d['hard_outlier_threshold']))
 
         tmp = {
             'segment_data': segment,
@@ -80,6 +81,7 @@ def baseline_estimate_template(rawdata_colname: str | int, d=dict({})) -> dict:
     utils.new_dict_keyval(d,'gradient_filter_std_threshold', 0.2)
     utils.new_dict_keyval(d,'outlier_filter_std_threshold', 1.0)
     utils.new_dict_keyval(d,'polynomial_degree', 3)
+    utils.new_dict_keyval(d,'hard_outlier_threshold', 5000.0)
     return d
 
 def moving_average(arr: np.ndarray, n=3):

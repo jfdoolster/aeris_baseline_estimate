@@ -2,9 +2,6 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
-
-
-
 def baseline_correction_plotter(df: pd.DataFrame, d: dict) -> plt.Figure:
     set_custom_rcparams()
 
@@ -29,7 +26,8 @@ def baseline_correction_plotter(df: pd.DataFrame, d: dict) -> plt.Figure:
     ax1.plot(df['seconds'], df['segment_gradient'], color=gradient_color, label=r"$\nabla\chi$")
     vertical_max = (d['gradient_filter_std_threshold'] + 0.5 ) * np.std(df['segment_gradient'])
     ax1.plot(df[df['gradient_mask']]['seconds'], df[df['gradient_mask']]['segment_gradient'], \
-        ls='None', marker='o', color=fitted_color, label=rf"$\nabla\chi < \pm {d['gradient_filter_std_threshold']} \sigma$")
+        ls='None', marker='o', color=fitted_color, \
+            label=rf"$\nabla\chi<\pm{d['gradient_filter_std_threshold']:3.2f}\sigma$")
     ax1.set_ylim(-vertical_max, vertical_max)
 
     # plot gradient of rawdata and unfiltered samples
@@ -38,7 +36,7 @@ def baseline_correction_plotter(df: pd.DataFrame, d: dict) -> plt.Figure:
         label=r"$\tilde{\chi}$"+rf"$(n = {d['window_size']:d})$")
     outfilt = df[df['outlier_mask']]
     ax2.plot(outfilt['seconds'], outfilt['segment_data'], ls='None', marker='o', color=fitted_color, \
-        label=r"$\tilde{\chi}$"+rf"$< \pm {d['window_size']:d}\sigma$")
+        label=r"$\tilde{\chi}$"+rf"$< \pm {d['outlier_filter_std_threshold']:3.2f}\sigma$")
 
 
     ax3 = fig.add_subplot(224, sharex=ax0, sharey=ax0)
@@ -60,6 +58,12 @@ def baseline_correction_plotter(df: pd.DataFrame, d: dict) -> plt.Figure:
     for ax in [ax1]:
         ax.legend()
         ax.set_ylabel(r"$\nabla$"+f"{d['rawdata_colname']}")
+
+    for ax in [ax2]:
+        std = outfilt['segment_data'].dropna().std()
+        avg = df['segment_data'].dropna().mean()
+        ax.set_ylim(bottom = min(df['segment_data'].dropna()))
+        ax.set_ylim(top = avg + (5.0 * std))
 
     fig.tight_layout()
     return fig
