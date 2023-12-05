@@ -3,7 +3,16 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def baseline_correction_plotter(df: pd.DataFrame, d: dict) -> plt.Figure:
-    set_custom_rcparams()
+    plt.rcParams['axes.grid'] = True
+    plt.rcParams['lines.linewidth'] = 1.5
+    plt.rcParams['legend.loc'] = "upper left"
+    plt.rc('font', size=12)
+    plt.rc('axes', titlesize=16)
+    plt.rc('axes', labelsize=14)
+    plt.rc('xtick', labelsize=12)
+    plt.rc('ytick', labelsize=12)
+    plt.rc('legend', fontsize=10)
+    plt.rc('figure', titlesize=16)
 
     data_color = "C0"
     smooth_color = "C1"
@@ -67,15 +76,3 @@ def baseline_correction_plotter(df: pd.DataFrame, d: dict) -> plt.Figure:
 
     fig.tight_layout()
     return fig
-
-def set_custom_rcparams(grid=True):
-    plt.rcParams['axes.grid'] = grid
-    plt.rcParams['lines.linewidth'] = 1.5
-    plt.rcParams['legend.loc'] = "upper left"
-    plt.rc('font', size=12)
-    plt.rc('axes', titlesize=16)
-    plt.rc('axes', labelsize=14)
-    plt.rc('xtick', labelsize=12)
-    plt.rc('ytick', labelsize=12)
-    plt.rc('legend', fontsize=10)
-    plt.rc('figure', titlesize=16)
