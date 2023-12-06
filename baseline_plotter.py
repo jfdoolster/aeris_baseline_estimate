@@ -52,7 +52,7 @@ def baseline_correction_plotter(df: pd.DataFrame, d: dict) -> plt.Figure:
     ax3.plot(df['seconds'], df[d['rawdata_colname']], color=data_color, \
         label=r'$\chi$')
     ax3.plot(df['seconds'], df[f"{d['rawdata_colname']}_baseline"], color=fitted_color,
-        label=r'$\chi_{0}$')
+        label=r"$\chi_{0}$"+f" deg({d['polynomial_degree']})", lw=3)
 
     for ax in [ax2, ax3]:
         ax.set_xlabel("seconds")
@@ -76,6 +76,10 @@ def baseline_correction_plotter(df: pd.DataFrame, d: dict) -> plt.Figure:
         if d['rawdata_colname'] == 'C2H6' and max(df[d['rawdata_colname']]) > 500:
             ax.set_ylim(top = 500.0)
         #ax.set_ylim(bottom = min(df['segment_data'].dropna()))
+
+    lbls = ['A', 'B', 'C', 'D']
+    for i, ax in enumerate([ax0, ax1, ax2, ax3]):
+        ax.text(0.90, 0.95, lbls[i], fontsize=20, transform=ax.transAxes, va='top')
 
     fig.tight_layout()
     return fig
