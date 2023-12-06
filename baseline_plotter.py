@@ -71,8 +71,11 @@ def baseline_correction_plotter(df: pd.DataFrame, d: dict) -> plt.Figure:
     for ax in [ax2]:
         std = outfilt['segment_data'].dropna().std()
         avg = df['segment_data'].dropna().mean()
-        ax.set_ylim(bottom = min(df['segment_data'].dropna()))
-        ax.set_ylim(top = avg + (5.0 * std))
+        if d['rawdata_colname'] == 'CH4' and max(df[d['rawdata_colname']]) > 100:
+            ax.set_ylim(top = 100.0)
+        if d['rawdata_colname'] == 'C2H6' and max(df[d['rawdata_colname']]) > 500:
+            ax.set_ylim(top = 500.0)
+        #ax.set_ylim(bottom = min(df['segment_data'].dropna()))
 
     fig.tight_layout()
     return fig
