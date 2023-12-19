@@ -23,36 +23,43 @@ def baseline_correction_plotter(df: pd.DataFrame, d: dict) -> plt.Figure:
     fig = plt.figure()
     fig.set_size_inches(12, 8)
 
+    #CVAR='\chi'
+    CVAR='C'
+    rawdata_str = rf'${CVAR}$'
+    smoothed_str = fr"$\widetilde {CVAR}$"+rf"$\,(n = {d['window_size']:d})$"
+    gradfilt_str = rf"$\nabla {CVAR}<\pm{d['gradient_filter_std_threshold']:3.2f}\sigma$"
+    meanfilt_str = rf"$\widetilde {CVAR}$"+rf"$< \pm {d['outlier_filter_std_threshold']:3.2f}\sigma$"
+    baseline_str = rf"${CVAR}_{0}$"+f" deg({d['polynomial_degree']})"
+
     # plot rawdata and smoothed data
     ax0 = fig.add_subplot(221)
     ax0.plot(df['seconds'], df[d['rawdata_colname']], color=data_color, \
-        label=r'$\chi$')
+        label=rawdata_str)
     ax0.plot(df['seconds'], df['segment_data'], color=smooth_color, \
-        label=r"$\tilde{\chi}$"+rf"$(n = {d['window_size']:d})$")
+        label=smoothed_str)
 
     # plot gradient of rawdata and unfiltered samples
     ax1 = fig.add_subplot(222, sharex=ax0)
-    ax1.plot(df['seconds'], df['segment_gradient'], color=gradient_color, label=r"$\nabla\chi$")
+    ax1.plot(df['seconds'], df['segment_gradient'], color=gradient_color, label=fr"$\nabla {CVAR}$")
     vertical_max = (d['gradient_filter_std_threshold'] + 0.5 ) * np.std(df['segment_gradient'])
     ax1.plot(df[df['gradient_mask']]['seconds'], df[df['gradient_mask']]['segment_gradient'], \
-        ls='None', marker='o', color=fitted_color, \
-            label=rf"$\nabla\chi<\pm{d['gradient_filter_std_threshold']:3.2f}\sigma$")
+        ls='None', marker='o', color=fitted_color, label=gradfilt_str)
     ax1.set_ylim(-vertical_max, vertical_max)
 
     # plot gradient of rawdata and unfiltered samples
     ax2 = fig.add_subplot(223, sharex=ax0, sharey=ax0)
     ax2.plot(df['seconds'], df['segment_data'], color=smooth_color, \
-        label=r"$\tilde{\chi}$"+rf"$(n = {d['window_size']:d})$")
+        label=smoothed_str)
     outfilt = df[df['outlier_mask']]
     ax2.plot(outfilt['seconds'], outfilt['segment_data'], ls='None', marker='o', color=fitted_color, \
-        label=r"$\tilde{\chi}$"+rf"$< \pm {d['outlier_filter_std_threshold']:3.2f}\sigma$")
+        label=meanfilt_str)
 
 
     ax3 = fig.add_subplot(224, sharex=ax0, sharey=ax0)
     ax3.plot(df['seconds'], df[d['rawdata_colname']], color=data_color, \
-        label=r'$\chi$')
+        label=rawdata_str)
     ax3.plot(df['seconds'], df[f"{d['rawdata_colname']}_baseline"], color=fitted_color,
-        label=r"$\chi_{0}$"+f" deg({d['polynomial_degree']})", lw=3)
+        label=baseline_str, lw=3)
 
     for ax in [ax2, ax3]:
         ax.set_xlabel("seconds")
