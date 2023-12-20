@@ -23,7 +23,6 @@ def baseline_correction_plotter(df: pd.DataFrame, d: dict) -> plt.Figure:
     fig = plt.figure()
     fig.set_size_inches(12, 8)
 
-    #CVAR='\chi'
     CVAR='C'
     rawdata_str = rf'${CVAR}$'
     smoothed_str = fr"$\widetilde {CVAR}$"+rf"$\,(n = {d['window_size']:d})$"
