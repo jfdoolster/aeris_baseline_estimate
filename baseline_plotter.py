@@ -24,7 +24,7 @@ def baseline_correction_plotter(df: pd.DataFrame, d: dict) -> plt.Figure:
     fig = plt.figure()
     fig.set_size_inches(12, 8)
 
-    CVAR='C'
+    CVAR='\chi'
     rawdata_str = rf'${CVAR}$'
     smoothed_str = fr"$\widetilde {CVAR}$"+rf"$\,(n = {d['window_size']:d})$"
     gradfilt_str = rf"$\nabla {CVAR}<\pm{d['gradient_filter_std_threshold']:3.2f}\sigma$"
