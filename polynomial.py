@@ -35,3 +35,13 @@ def polynomial_regression(x_arr: np.ndarray, y_arr: np.ndarray, power=1, force_z
         beta = np.insert(beta, 0, 0, axis=0)
 
     return beta, yhat
+
+def calc_Rsquared(ydata: np.ndarray, yhat:np.ndarray):
+    # https://en.wikipedia.org/wiki/Partition_of_sums_of_squares
+    ESS = sum((yhat - np.mean(ydata))**2)
+    RSS = sum((ydata - yhat)**2)
+    TSS = ESS + RSS
+    R2 = 1 - (RSS/TSS)
+    return R2
+
+
