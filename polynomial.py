@@ -21,7 +21,7 @@ def polynomial_regression(x_arr: np.ndarray, y_arr: np.ndarray, power=1, force_z
 
     if xx_determinant == 0.0:
         print("Singluar Matrix!")
-        return np.empty((power+1,))
+        return np.empty((power+1,1)), np.empty((len(y_arr),1))
 
     xx_inv = np.linalg.inv(x_cross_xprime)
     xx_cross_xp = np.matmul(xx_inv, x_mat_prime)
