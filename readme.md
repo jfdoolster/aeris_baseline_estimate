@@ -2,15 +2,15 @@ Minimal working example of baseline correction routine used for NMT UAV-mounted 
 
 Developed and tested with python 3.11
 
-### usage:
+### Usage:
 
 ```bash
 python main.py -f /path/to/csv
 
-python main.py -f data/merge.csv
+python main.py -f data/level0.csv
 ```
 
-### output:
+### Output:
 
 pandas dataframe with
 * original data timestamp ('Timestamp')
@@ -24,20 +24,20 @@ pandas dataframe with
 * estimated baseline ('CH4_baseline' or 'C2H6_baseline')
 * baseline-adjusted data ('CH4_adjusted' or 'C2H6_adjusted')
 
-### dependencies:
+### Dependencies:
 
-python >3.9 with numpy, pandas, and matplotlib
+Python >3.9 with numpy, pandas, and matplotlib
 
-currently requires csv files with **datetime string** ('Timestamp') and floating point ('CH4' or 'C2H6') data columns
+Script requires csv files with **datetime string** ('Timestamp') and floating point ('CH4' or 'C2H6') data columns
 
-### customization:
+### Customization:
 
 Individual datasets may require custom filter settings to improve baseline estimate.
-Filter settings are definined in [./main.py](main.py) inside the `dset_info` dictionary.
+Initial filter settings defined in [./main.py](main.py) inside the `dset_info` dictionary.
 
 Timestamp and data column names can also be specified in `dset_info` for specific csv files.
 
 
-### contact:
+### Contact:
 
 jonathan.dooley@student.nmt.edu

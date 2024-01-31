@@ -3,7 +3,7 @@ import pandas as pd
 from polynomial import polynomial_regression
 import baseline_utils as utils
 
-def baseline_correction(xdata: np.ndarray, ydata: np.ndarray, d: dict):
+def baseline_estimate(xdata: np.ndarray, ydata: np.ndarray, d: dict):
     df = pd.DataFrame() # initialize output dataframe
 
     smoothed=moving_average(ydata, n=d['window_size'])

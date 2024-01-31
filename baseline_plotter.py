@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import *
 
-def baseline_correction_plotter(df: pd.DataFrame, d: dict) -> plt.Figure:
+def baseline_estimate_plotter(df: pd.DataFrame, d: dict) -> plt.Figure:
     plt.rcParams['axes.grid'] = True
     plt.rcParams['lines.linewidth'] = 1.5
     plt.rcParams['legend.loc'] = "upper left"
