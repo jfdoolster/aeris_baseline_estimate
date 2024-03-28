@@ -72,7 +72,6 @@ def baseline_estimate(xdata: np.ndarray, ydata: np.ndarray, d: dict):
 
     return df
 
-
 def baseline_estimate_template(rawdata_colname: str | int, d=dict({})) -> dict:
     utils.new_dict_keyval(d,'rawdata_colname', rawdata_colname)
     utils.new_dict_keyval(d,'timestamp_colname', 'Timestamp')
