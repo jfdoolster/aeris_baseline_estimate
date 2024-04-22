@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import *
 
-def baseline_estimate_plotter(df: pd.DataFrame, d: dict) -> plt.Figure:
+def baseline_estimate_plotter(df: pd.DataFrame, d: dict, title="") -> plt.Figure:
     plt.rcParams['axes.grid'] = True
     plt.rcParams['lines.linewidth'] = 1.5
     plt.rcParams['legend.loc'] = "upper left"
@@ -97,5 +97,7 @@ def baseline_estimate_plotter(df: pd.DataFrame, d: dict) -> plt.Figure:
     for i, ax in enumerate([ax0, ax1, ax2, ax3]):
         ax.text(0.90, 0.95, lbls[i], fontsize=20, transform=ax.transAxes, va='top')
 
+    if title.strip() not in ['', None]:
+        fig.suptitle(title)
     fig.tight_layout()
     return fig
