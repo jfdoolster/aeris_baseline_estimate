@@ -13,7 +13,7 @@ def baseline_estimate_plotter(df: pd.DataFrame, d: dict, title="") -> plt.Figure
     plt.rc('xtick', labelsize=12)
     plt.rc('ytick', labelsize=12)
     plt.rc('legend', fontsize=10)
-    plt.rc('figure', titlesize=16)
+    #plt.rc('figure', titlesize=16)
 
     data_color = "C0"
     smooth_color = "C1"
@@ -97,7 +97,7 @@ def baseline_estimate_plotter(df: pd.DataFrame, d: dict, title="") -> plt.Figure
     for i, ax in enumerate([ax0, ax1, ax2, ax3]):
         ax.text(0.90, 0.95, lbls[i], fontsize=20, transform=ax.transAxes, va='top')
 
-    if title.strip() not in ['', None]:
-        fig.suptitle(title)
+    if title.strip() not in ['']:
+        fig.suptitle(title, fontsize=26)
     fig.tight_layout()
     return fig
