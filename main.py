@@ -6,7 +6,8 @@ if __name__=="__main__":
     import pandas as pd
     import matplotlib.pyplot as plt
     from baseline_plotter import baseline_estimate_plotter
-    from baseline_calc import baseline_estimate_template, baseline_estimate
+    from baseline_calc import baseline_estimate
+    from background_config import Baseline_Config
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--file', required=True, type=str,
@@ -16,8 +17,12 @@ if __name__=="__main__":
 
     rawdata_path = argdict['file']
 
-    ch4_dset_info  = baseline_estimate_template(rawdata_colname="CH4")
-    c2h6_dset_info = baseline_estimate_template(rawdata_colname="C2H6", d={'polynomial_degree': 4})
+    ch4_class = Baseline_Config(rawdata_colname="CH4")
+    ch4_dset_info = ch4_class.to_dict()
+
+    c2h6_class = Baseline_Config(rawdata_colname="C2H6")
+    c2h6_class.polynomial_degree = 4
+    c2h6_dset_info = c2h6_class.to_dict()
 
     df0 = pd.read_csv(rawdata_path, parse_dates=['Timestamp'])
     aeris_mask = (df0['CH4'].notna() & df0['C2H6'].notna()) & (df0['Sts'] > 0)
