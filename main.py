@@ -18,11 +18,11 @@ if __name__=="__main__":
     rawdata_path = argdict['file']
 
     ch4_class = Baseline_Config(rawdata_colname="CH4")
-    ch4_dset_info = ch4_class.to_dict()
+    ch4_dset_info = ch4_class.__dict__
 
     c2h6_class = Baseline_Config(rawdata_colname="C2H6")
     c2h6_class.polynomial_degree = 4
-    c2h6_dset_info = c2h6_class.to_dict()
+    c2h6_dset_info = c2h6_class.__dict__
 
     df0 = pd.read_csv(rawdata_path, parse_dates=['Timestamp'])
     aeris_mask = (df0['CH4'].notna() & df0['C2H6'].notna()) & (df0['Sts'] > 0)
