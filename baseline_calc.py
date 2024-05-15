@@ -7,7 +7,6 @@ def baseline_estimate(xdata: np.ndarray, ydata: np.ndarray, d: dict):
     df = pd.DataFrame() # initialize output dataframe
 
     smoothed=moving_average(ydata, n=d['window_size'])
-    #print(f"{d['rawdata_colname']} {d['window_size']}-point smoothed")
 
     # split smoothed data into segments with approximately equal periods
     segments, num_segs = segmenting_filter(smoothed, period=d['segment_period'])
