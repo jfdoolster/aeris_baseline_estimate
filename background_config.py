@@ -14,7 +14,7 @@ class Baseline_Config:
 
     def set_columns(self, rawdata_colname:str, timestamp_colname='Timestamp'):
         self.rawdata_colname   =  rawdata_colname
-        self.timestamp_colname =  rawdata_colname
+        self.timestamp_colname =  timestamp_colname
 
     def set_attrs(self, window_size:int=3, segment_period:int= 120,
         gradient_filter_std_threshold = 0.2, outlier_filter_std_threshold= 1.0,
