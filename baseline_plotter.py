@@ -75,14 +75,17 @@ def baseline_estimate_plotter(df: pd.DataFrame, d: dict, title="") -> plt.Figure
 
     for ax in [ax0, ax2, ax3]:
         ax.legend()
+        ax.set_ylabel(r"$\mathrm{CH_{4}}$ (ppm)")
         if d['rawdata_colname'] in ['C2H6']:
-            ax.set_ylabel(f"{d['rawdata_colname']} (ppb)")
-            continue
-        ax.set_ylabel(f"{d['rawdata_colname']} (ppm)")
+            #ax.set_ylabel(f"{d['rawdata_colname']} (ppb)")
+            ax.set_ylabel(r"$\mathrm{C_{2}H_{6}}$ (ppb)")
 
     for ax in [ax1]:
         ax.legend()
-        ax.set_ylabel(r"$\nabla$"+f"{d['rawdata_colname']}")
+        #ax.set_ylabel(r"$\nabla$"+f"{d['rawdata_colname']}")
+        ax.set_ylabel(r"$\nabla\,\mathrm{CH_{4}}$ (ppm)")
+        if d['rawdata_colname'] in ['C2H6']:
+            ax.set_ylabel(r"$\nabla\,\mathrm{C_{2}H_{6}}$ (ppb)")
 
     for ax in [ax2]:
         std = outfilt['segment_data'].dropna().std()
