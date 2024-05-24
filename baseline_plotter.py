@@ -5,15 +5,17 @@ from matplotlib.ticker import *
 
 def baseline_estimate_plotter(df: pd.DataFrame, d: dict, title="") -> plt.Figure:
     plt.rcParams['axes.grid'] = True
-    plt.rcParams['lines.linewidth'] = 1.5
+    plt.rcParams['grid.alpha'] = 0.3
+    plt.rcParams['axes.axisbelow'] = True
     plt.rcParams['legend.loc'] = "upper left"
+    #plt.rcParams['image.cmap'] = 'viridis_r'
     plt.rc('font', size=12)
     plt.rc('axes', titlesize=16)
     plt.rc('axes', labelsize=14)
     plt.rc('xtick', labelsize=12)
     plt.rc('ytick', labelsize=12)
-    plt.rc('legend', fontsize=10)
-    #plt.rc('figure', titlesize=16)
+    plt.rc('legend', fontsize=14)
+    plt.rc('figure', titlesize=16)
 
     data_color = "C0"
     smooth_color = "C1"
