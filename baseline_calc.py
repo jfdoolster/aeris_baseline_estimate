@@ -16,6 +16,8 @@ def baseline_estimate(xdata: np.ndarray, ydata: np.ndarray, d: dict):
         seg_label = np.array([i] * len(segment))
 
         seg_gmask, seg_gradient = gradient_filter(segment, std_cutoff=d['gradient_filter_std_threshold'])
+        if len(seg_gradient) < 1:
+            continue
 
         # summary statistics for gradient-filtered segment
         # set cuttoff values for remaining outliers
