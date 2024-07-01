@@ -1,4 +1,4 @@
-Minimal working example of baseline correction routine used for NMT UAV-mounted Aires MIRA Pico.
+Minimal working example of background correction routine used for NMT UAV-mounted Aires MIRA Pico.
 
 Developed and tested with python 3.11
 
@@ -20,9 +20,9 @@ pandas dataframe with
 * segmented and labeled smoothed data ('segment_data' and 'segment_label')
 * gradient of smoothed data ('segment_gradient')
 * boolean mask from gradient filter ('gradient_mask')
-* boolean mask from outlier (mean) filter ('outlier_mask'); final mask for baseline data
-* estimated baseline ('CH4_baseline' or 'C2H6_baseline')
-* baseline-adjusted data ('CH4_adjusted' or 'C2H6_adjusted')
+* boolean mask from outlier (mean) filter ('outlier_mask'); final mask for background data
+* estimated background ('CH4_background' or 'C2H6_background')
+* background-adjusted data ('CH4_adjusted' or 'C2H6_adjusted')
 
 ### Dependencies:
 
@@ -32,7 +32,7 @@ Script requires csv files with **datetime string** ('Timestamp') and floating po
 
 ### Customization:
 
-Individual datasets may require custom filter settings to improve baseline estimate.
+Individual datasets may require custom filter settings to improve background estimate.
 Initial filter settings defined in [./main.py](main.py) inside the `dset_info` dictionary.
 
 Timestamp and data column names can also be specified in `dset_info` for specific csv files.
