@@ -1,7 +1,13 @@
 import numpy as np
 import pandas as pd
-from polynomial import polynomial_regression
-import baseline_utils as utils
+
+import os, sys
+syspath = os.path.abspath(os.path.join(os.path.dirname(__file__), '..')).replace(os.sep, '/')
+if syspath not in sys.path:
+    sys.path.append(syspath)
+
+from nmt_uas_hydrocarbon_background_estimate.polynomial import polynomial_regression
+import nmt_uas_hydrocarbon_background_estimate.baseline_utils as utils
 
 def baseline_estimate(xdata: np.ndarray, ydata: np.ndarray, d: dict):
     df = pd.DataFrame() # initialize output dataframe
