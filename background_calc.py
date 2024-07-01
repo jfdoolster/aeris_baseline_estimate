@@ -1,10 +1,10 @@
 import numpy as np
 import pandas as pd
 
-from nmt_uas_hydrocarbon_background_estimate.polynomial import polynomial_regression
-import nmt_uas_hydrocarbon_background_estimate.baseline_utils as utils
+from polynomial import polynomial_regression
+import background_utils as utils
 
-def baseline_estimate(xdata: np.ndarray, ydata: np.ndarray, d: dict):
+def background_estimate(xdata: np.ndarray, ydata: np.ndarray, d: dict):
     df = pd.DataFrame() # initialize output dataframe
 
     smoothed=moving_average(ydata, n=d['window_size'])
@@ -66,14 +66,14 @@ def baseline_estimate(xdata: np.ndarray, ydata: np.ndarray, d: dict):
 
     df = pd.concat([df,
         pd.DataFrame.from_dict({
-            f"{d['rawdata_colname']}_baseline": yhat,
-            f"{d['rawdata_colname']}_baseline_error": yerr,
+            f"{d['rawdata_colname']}_background": yhat,
+            f"{d['rawdata_colname']}_background_error": yerr,
             f"{d['rawdata_colname']}_adjusted": yadj,
         })], axis=1)
 
     return df
 
-def baseline_estimate_template(rawdata_colname: str | int, d=dict({})) -> dict:
+def background_estimate_template(rawdata_colname: str | int, d=dict({})) -> dict:
     utils.new_dict_keyval(d,'rawdata_colname', rawdata_colname)
     utils.new_dict_keyval(d,'timestamp_colname', 'Timestamp')
     utils.new_dict_keyval(d,'window_size', 3)
@@ -106,12 +106,3 @@ def segmenting_filter(arr: np.ndarray, dt=1, period = 120) -> tuple[list, int]:
 def segment_array(arr: list, n: int) -> list:
     k, m = divmod(len(arr), n)
     return list(np.array(arr[i*k+min(i, m):(i+1)*k+min(i+1, m)]) for i in range(n))
-
-#def dataset_template(d: dict) -> dict:
-#    # todo: remove function?
-#    utils.new_dict_keyval(d,'window_size', 3)
-#    utils.new_dict_keyval(d,'segment_period', 120)
-#    utils.new_dict_keyval(d,'gradient_filter_std_threshold', 0.2)
-#    utils.new_dict_keyval(d,'outlier_filter_std_threshold', 1.0)
-#    utils.new_dict_keyval(d,'polynomial_degree', 3)
-#    return d

@@ -5,9 +5,9 @@ if __name__=="__main__":
     import numpy as np
     import pandas as pd
     import matplotlib.pyplot as plt
-    from baseline_plotter import baseline_estimate_plotter
-    from baseline_calc import baseline_estimate
-    from background_config import Baseline_Config
+    from background_plotter import background_estimate_plotter
+    from background_calc import background_estimate
+    from background_config import Background_Config
 
     parser = argparse.ArgumentParser()
     parser.add_argument('-f', '--file', required=True, type=str,
@@ -17,10 +17,10 @@ if __name__=="__main__":
 
     rawdata_path = argdict['file']
 
-    ch4_class = Baseline_Config(rawdata_colname="CH4")
+    ch4_class = Background_Config(rawdata_colname="CH4")
     ch4_dset_info = ch4_class.__dict__
 
-    c2h6_class = Baseline_Config(rawdata_colname="C2H6")
+    c2h6_class = Background_Config(rawdata_colname="C2H6")
     c2h6_class.polynomial_degree = 4
     c2h6_dset_info = c2h6_class.__dict__
 
@@ -30,18 +30,18 @@ if __name__=="__main__":
     # read and process METHANE data only
     seconds = np.array(df0.loc[aeris_mask,'Seconds'])
     rawdata = np.array(df0.loc[aeris_mask, ch4_dset_info['rawdata_colname']])
-    df_ch4 = baseline_estimate(seconds, rawdata, ch4_dset_info)
+    df_ch4 = background_estimate(seconds, rawdata, ch4_dset_info)
     df_ch4.index = df0.loc[aeris_mask,:].index
     df_ch4.loc[aeris_mask,'Timestamp'] = df0.loc[aeris_mask,'Timestamp']
-    baseline_estimate_plotter(df_ch4, ch4_dset_info)
+    background_estimate_plotter(df_ch4, ch4_dset_info)
 
     # read and process ETHANE data only
     seconds = np.array(df0.loc[aeris_mask,'Seconds'])
     rawdata = np.array(df0.loc[aeris_mask, c2h6_dset_info['rawdata_colname']])
-    df_c2h6 = baseline_estimate(seconds, rawdata, c2h6_dset_info)
+    df_c2h6 = background_estimate(seconds, rawdata, c2h6_dset_info)
     df_c2h6.index = df0.loc[aeris_mask,:].index
     df_c2h6.loc[aeris_mask,'Timestamp'] = df0.loc[aeris_mask,'Timestamp']
-    baseline_estimate_plotter(df_c2h6, c2h6_dset_info)
+    background_estimate_plotter(df_c2h6, c2h6_dset_info)
 
     pd.set_option('display.precision', 2)
     print(df_ch4)

@@ -1,4 +1,4 @@
-class Baseline_Config:
+class Background_Config:
     rawdata_colname: str
     timestamp_colname:str
     window_size:int

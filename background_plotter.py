@@ -3,7 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.ticker import *
 
-def baseline_estimate_plotter(df: pd.DataFrame, d: dict, title="") -> plt.Figure:
+def background_estimate_plotter(df: pd.DataFrame, d: dict, title="") -> plt.Figure:
     plt.rcParams['axes.grid'] = True
     plt.rcParams['grid.alpha'] = 0.3
     plt.rcParams['axes.axisbelow'] = True
@@ -31,7 +31,7 @@ def baseline_estimate_plotter(df: pd.DataFrame, d: dict, title="") -> plt.Figure
     smoothed_str = fr"$\widetilde {CVAR}$"+rf"$\,(n = {d['window_size']:d})$"
     gradfilt_str = rf"$\nabla {CVAR}<\pm{d['gradient_filter_std_threshold']:3.2f}\sigma$"
     meanfilt_str = rf"$\widetilde {CVAR}$"+rf"$< \pm {d['outlier_filter_std_threshold']:3.2f}\sigma$"
-    baseline_str = rf"${CVAR}_{0}$"+f" deg({d['polynomial_degree']})"
+    background_str = rf"${CVAR}_{0}$"+f" deg({d['polynomial_degree']})"
 
     # plot rawdata and smoothed data
     ax0 = fig.add_subplot(221)
@@ -69,8 +69,8 @@ def baseline_estimate_plotter(df: pd.DataFrame, d: dict, title="") -> plt.Figure
     ax3 = fig.add_subplot(224, sharex=ax0, sharey=ax0)
     ax3.plot(df['seconds'], df[d['rawdata_colname']], color=data_color, \
         label=rawdata_str)
-    ax3.plot(df['seconds'], df[f"{d['rawdata_colname']}_baseline"], color=fitted_color,
-        label=baseline_str, lw=3)
+    ax3.plot(df['seconds'], df[f"{d['rawdata_colname']}_background"], color=fitted_color,
+        label=background_str, lw=3)
 
     for ax in [ax2, ax3]:
         ax.set_xlabel("seconds")
