@@ -2,16 +2,16 @@
 # Visit https://bit.ly/cffinit to generate yours today!
 
 cff-version: 1.2.0
-title: aeris_baseline_estimate
-message: >-
-  If you use this software, please cite it using the
-  metadata from this file.
+title: nmt_uas_hydrocarbon_background_estimate
+message: Aries Mira Pico Background Estimation MWE
 type: software
 authors:
   - given-names: Jonathan F
     family-names: Dooley
     email: jonathan.dooley@student.nmt.edu
     affiliation: New Mexico Institute of Mining and Technology
-repository-code: 'https://github.com/jfdoolster/aeris_baseline_estimate.git'
+repository-code: >-
+  https://github.com/jfdoolster/nmt_uas_hydrocarbon_background_estimate.git
 license: GPL-3.0
 date-released: '2024-07-01'
+
