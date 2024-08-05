@@ -17,17 +17,24 @@ if __name__=="__main__":
 
     rawdata_path = argdict['file']
 
+    # read data
+    df0 = pd.read_csv(rawdata_path, parse_dates=['Timestamp'])
+    if 'Seconds' not in df0.columns:
+        df0.insert(1, 'Seconds', (df0['Timestamp']-df0['Timestamp'].min())/np.timedelta64(1, 's'))
+
+    aeris_mask = (df0['CH4'].notna() & df0['C2H6'].notna()) 
+    if 'Sts' in df0.columns:
+        aeris_mask &= (df0['Sts'] > 0)
+
+
+    # set configuration class for CH4 and C2H6
     ch4_class = Background_Config(rawdata_colname="CH4")
-    ch4_dset_info = ch4_class.__dict__
 
     c2h6_class = Background_Config(rawdata_colname="C2H6")
     c2h6_class.polynomial_degree = 4
-    c2h6_dset_info = c2h6_class.__dict__
-
-    df0 = pd.read_csv(rawdata_path, parse_dates=['Timestamp'])
-    aeris_mask = (df0['CH4'].notna() & df0['C2H6'].notna()) & (df0['Sts'] > 0)
 
     # read and process METHANE data only
+    ch4_dset_info = ch4_class.__dict__
     seconds = np.array(df0.loc[aeris_mask,'Seconds'])
     rawdata = np.array(df0.loc[aeris_mask, ch4_dset_info['rawdata_colname']])
     df_ch4 = background_estimate(seconds, rawdata, ch4_dset_info)
@@ -36,6 +43,7 @@ if __name__=="__main__":
     background_estimate_plotter(df_ch4, ch4_dset_info)
 
     # read and process ETHANE data only
+    c2h6_dset_info = c2h6_class.__dict__
     seconds = np.array(df0.loc[aeris_mask,'Seconds'])
     rawdata = np.array(df0.loc[aeris_mask, c2h6_dset_info['rawdata_colname']])
     df_c2h6 = background_estimate(seconds, rawdata, c2h6_dset_info)
